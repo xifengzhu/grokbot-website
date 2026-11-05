@@ -21,7 +21,9 @@ const items: Array<{ id: PageId; label: string }> = [
 
 <header class="site-header">
   <div class="site-header-inner wrap">
-    <a class="logo" href={pathFor('home', locale)}>{pick(locale, copy.common.brandDisplay)}</a>
+    <a class="logo" href={pathFor('home', locale)}>
+      <img src="/brand/logo.png" alt={pick(locale, copy.common.brandDisplay)} width="142" height="32" />
+    </a>
     <input id="nav-toggle" class="nav-toggle" type="checkbox" />
     <label class="hamburger" for="nav-toggle">
       <span class="hamburger-bars" aria-hidden="true"></span>

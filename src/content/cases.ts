@@ -5,6 +5,13 @@ export type CaseLink = {
   label: Localized;
 };
 
+export type CaseImage = {
+  src: string;
+  alt: Localized;
+  /** Served below 720px. Desktop `src` stays the fallback. */
+  mobileSrc?: string;
+};
+
 export type CaseStudy = {
   id: string;
   name: string;
@@ -12,6 +19,7 @@ export type CaseStudy = {
   type: Localized;
   summary: Localized;
   links: CaseLink[];
+  media: CaseImage[];
 };
 
 const visit = { zh: '访问客户站点', en: 'Visit live site' };
@@ -28,6 +36,7 @@ export const primaryCases: CaseStudy[] = [
       en: 'A Canada-based fashion Shopify storefront. Beansmile delivered theme customization, native feature development, storefront performance work, and operations support — including popup behavior, new-product labels, and cart discount messaging.',
     },
     links: [{ href: 'https://psylos1.com', label: visit }],
+    media: [{ src: '/cases/psylos1.webp', alt: { zh: 'Psylos1', en: 'Psylos1' } }],
   },
   {
     id: 'chita',
@@ -39,6 +48,7 @@ export const primaryCases: CaseStudy[] = [
       en: 'A custom Shopify storefront plan for CHITA: theme setup and store decoration, basic configuration, initial product data upload, and operations support.',
     },
     links: [{ href: 'https://chitaliving.com/', label: visit }],
+    media: [{ src: '/cases/chita.webp', alt: { zh: 'CHITA', en: 'CHITA' } }],
   },
   {
     id: 'herbdoc',
@@ -50,6 +60,13 @@ export const primaryCases: CaseStudy[] = [
       en: 'Herbdoc.com is a U.S. B2C supplements storefront with online ordering, subscriptions, and promotions. Public materials highlight cross-border collaboration, integration capability, and local market/compliance adaptation. (No sales claims.)',
     },
     links: [{ href: 'https://www.herbdoc.com', label: visit }],
+    media: [
+      {
+        src: '/cases/herbdoc.webp',
+        mobileSrc: '/cases/herbdoc-mobile.webp',
+        alt: { zh: 'Herbdoc', en: 'Herbdoc' },
+      },
+    ],
   },
   {
     id: 'store-clone-geofy',
@@ -64,6 +81,10 @@ export const primaryCases: CaseStudy[] = [
       { href: 'https://apps.shopify.com/store-clone', label: { zh: `${ourApps.zh} · Store Clone`, en: `${ourApps.en} · Store Clone` } },
       { href: 'https://apps.shopify.com/geoify', label: { zh: `${ourApps.zh} · Geofy`, en: `${ourApps.en} · Geofy` } },
     ],
+    media: [
+      { src: '/cases/store-clone.webp', alt: { zh: 'Store Clone', en: 'Store Clone' } },
+      { src: '/cases/geofy-ui.png', alt: { zh: 'Geofy', en: 'Geofy' } },
+    ],
   },
   {
     id: 'altbasics',
@@ -75,6 +96,7 @@ export const primaryCases: CaseStudy[] = [
       en: 'A custom Shopify storefront plan: theme setup, store decoration, basic configuration, initial product data upload, operations support, and a custom product-image upload feature.',
     },
     links: [{ href: 'https://altbasics.com.cn/', label: visit }],
+    media: [{ src: '/cases/altbasics.webp', alt: { zh: 'Altbasics', en: 'Altbasics' } }],
   },
 ];
 

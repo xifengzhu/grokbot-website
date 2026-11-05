@@ -1,6 +1,6 @@
 ---
 import { pick, type Localized } from '../content/copy';
-import type { CaseLink } from '../content/cases';
+import type { CaseImage, CaseLink } from '../content/cases';
 import type { Locale } from '../lib/locale';
 
 interface Props {
@@ -9,25 +9,41 @@ interface Props {
   type: Localized;
   summary: Localized;
   links: CaseLink[];
+  media: CaseImage[];
 }
 
-const { locale, name, type, summary, links } = Astro.props;
+const { locale, name, type, summary, links, media } = Astro.props;
 ---
 
 <article class="case-card">
-  <div class="placeholder" role="img" aria-label="占位图 · Placeholder">占位图 · Placeholder</div>
-  <p class="tag">{pick(locale, type)}</p>
-  <h3>{name}</h3>
-  <p>{pick(locale, summary)}</p>
-  {
-    links.length > 0 && (
-      <div class="case-links">
-        {links.map((link) => (
-          <a href={link.href} rel="noopener noreferrer" target="_blank">
-            {pick(locale, link.label)}
-          </a>
-        ))}
-      </div>
-    )
-  }
+  <div class:list={['case-media', { 'case-media--dual': media.length > 1 }]}>
+    {
+      media.map((image) =>
+        image.mobileSrc ? (
+          <picture>
+            <source media="(max-width: 720px)" srcset={image.mobileSrc} />
+            <img src={image.src} alt={pick(locale, image.alt)} />
+          </picture>
+        ) : (
+          <img src={image.src} alt={pick(locale, image.alt)} />
+        ),
+      )
+    }
+  </div>
+  <div class="case-body">
+    <p class="tag">{pick(locale, type)}</p>
+    <h3>{name}</h3>
+    <p>{pick(locale, summary)}</p>
+    {
+      links.length > 0 && (
+        <div class="case-links">
+          {links.map((link) => (
+            <a href={link.href} rel="noopener noreferrer" target="_blank">
+              {pick(locale, link.label)}
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
 </article>

@@ -21,7 +21,14 @@ const { locale } = Astro.props;
     <div class="case-grid case-grid--all section">
       {
         primaryCases.map((item) => (
-          <CaseCard locale={locale} name={item.name} type={item.type} summary={item.summary} links={item.links} />
+          <CaseCard
+            locale={locale}
+            name={item.name}
+            type={item.type}
+            summary={item.summary}
+            links={item.links}
+            media={item.media}
+          />
         ))
       }
     </div>

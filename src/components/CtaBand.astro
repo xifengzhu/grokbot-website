@@ -10,7 +10,7 @@ const { locale } = Astro.props;
 ---
 
 <section class="cta-band">
-  <div class="wrap cta-band-inner">
+  <div class="cta-band-inner">
     <h2>{pick(locale, copy.footer.cta)}</h2>
     <a class="btn footer-cta" href={pathFor('contact', locale)}>{pick(locale, copy.footer.ctaButton)}</a>
   </div>

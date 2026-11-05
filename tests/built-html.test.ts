@@ -57,6 +57,8 @@ describe('built pages', () => {
       expect(html).toContain(`lang="${page.lang}"`);
       expect(html).toContain(`class="lang-switch" href="${page.alt}"`);
       expect(html).toContain(`footer-cta" href="${page.contact}"`);
+      expect(html).not.toContain('beansmile.com/assets');
+      expect(html).not.toContain('占位图');
       expect(html).not.toContain('[TBD');
       expect(html).not.toContain('NBA');
       expect(html).not.toContain('Shopify Partner');
@@ -82,7 +84,12 @@ describe('built pages', () => {
     expect(html).not.toContain('电商引擎');
     expect(html).not.toContain('WeChatHub');
     expect(html).toContain('留下咨询');
-    expect(html).toContain('占位图 · Placeholder');
+    expect(html).toContain('/brand/logo.png');
+    expect(html).toContain('/brand/hero-og.jpg');
+    expect(html).toContain('/cases/psylos1.webp');
+    expect(html).toContain('/cases/chita.webp');
+    expect(html).toContain('/cases/altbasics.webp');
+    expect(html).not.toContain('/cases/geofy-ui.png');
   });
 
   it('keeps secondary capabilities off the homepage and on the services page', () => {
@@ -102,6 +109,12 @@ describe('built pages', () => {
     }
     expect(cases).toContain('https://apps.shopify.com/store-clone');
     expect(cases).toContain('https://apps.shopify.com/geoify');
+    expect(cases).toContain('/cases/herbdoc.webp');
+    expect(cases).toContain('media="(max-width: 720px)"');
+    expect(cases).toContain('/cases/herbdoc-mobile.webp');
+    expect(cases).toContain('/cases/store-clone.webp');
+    expect(cases).toContain('/cases/geofy-ui.png');
+    expect(cases).not.toContain('geofy-logo');
     const about = read('about/index.html');
     expect(about).toContain('广州乐豆信息科技有限公司');
     expect(about).toContain('Guangzhou Beansmile Information Technology Co., Ltd.');

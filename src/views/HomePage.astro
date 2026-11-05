@@ -24,16 +24,9 @@ const { locale } = Astro.props;
           <a class="btn btn-ghost" href={pathFor('services', locale)}>{pick(locale, copy.home.ctaSecondary)}</a>
         </div>
       </div>
-      <div class="hero-index" aria-label={pick(locale, copy.home.servicesIntro)}>
-        {
-          copy.services.items.map((item, index) => (
-            <a href={`${pathFor('services', locale)}#${item.id}`}>
-              <span class="num">{String(index + 1).padStart(2, '0')}</span>
-              <span>{pick(locale, item.title)}</span>
-            </a>
-          ))
-        }
-      </div>
+      <figure class="hero-visual">
+        <img src="/brand/hero-og.jpg" alt={pick(locale, copy.common.brandDisplay)} width="1200" height="630" />
+      </figure>
     </section>
 
     <section class="section" aria-labelledby="services-intro">
@@ -43,6 +36,16 @@ const { locale } = Astro.props;
           <p class="lede">{pick(locale, copy.home.servicesIntroBody)}</p>
         </div>
         <a href={pathFor('services', locale)}>{pick(locale, copy.common.learnMore)}</a>
+      </div>
+      <div class="service-rail" aria-label={pick(locale, copy.home.servicesIntro)}>
+        {
+          copy.services.items.map((item, index) => (
+            <a href={`${pathFor('services', locale)}#${item.id}`}>
+              <span class="num">{String(index + 1).padStart(2, '0')}</span>
+              <span>{pick(locale, item.title)}</span>
+            </a>
+          ))
+        }
       </div>
     </section>
 
@@ -63,6 +66,7 @@ const { locale } = Astro.props;
               type={item.type}
               summary={item.summary}
               links={item.links}
+              media={item.media}
             />
           ))
         }

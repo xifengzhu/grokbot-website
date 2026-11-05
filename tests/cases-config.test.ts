@@ -32,5 +32,28 @@ describe('case studies', () => {
     expect(blob).not.toMatch(/转化率|营收|搜索量/);
     expect(blob).not.toMatch(/revenue|conversion rate/i);
     expect(blob).not.toContain('Ancosti');
+    expect(blob).not.toContain('beansmile.com/assets');
+    expect(blob).not.toContain('geofy-logo');
+  });
+
+  it('uses local case images, Herbdoc mobile art, and the Geofy UI on the dual card', () => {
+    expect(primaryCases.find((item) => item.id === 'psylos1')?.media.map((image) => image.src)).toEqual([
+      '/cases/psylos1.webp',
+    ]);
+    expect(primaryCases.find((item) => item.id === 'herbdoc')?.media[0]).toMatchObject({
+      src: '/cases/herbdoc.webp',
+      mobileSrc: '/cases/herbdoc-mobile.webp',
+    });
+    expect(primaryCases.find((item) => item.id === 'store-clone-geofy')?.media.map((image) => image.src)).toEqual([
+      '/cases/store-clone.webp',
+      '/cases/geofy-ui.png',
+    ]);
+    for (const item of primaryCases) {
+      expect(item.media.length).toBeGreaterThan(0);
+      for (const image of item.media) {
+        expect(image.src.startsWith('/')).toBe(true);
+        expect(image.src).not.toMatch(/^https?:/);
+      }
+    }
   });
 });
