@@ -1,0 +1,42 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "beansmile",
+  "main": "workers/index.ts",
+  "compatibility_date": "2026-11-05",
+  "compatibility_flags": ["nodejs_compat"],
+  // workers.dev is enabled. Preview and version URLs stay on.
+  // Previews are public: this file does not attach Cloudflare Access.
+  "workers_dev": true,
+  "preview_urls": true,
+  "upload_source_maps": true,
+  // beansmile.xifengzhu.com is already attached (proxied) outside this file.
+  // Do not add a routes entry here — deploy must not create DNS.
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.01
+    }
+  },
+  "vars": {
+    "CONSULT_TO": "xifengzhu520@gmail.com"
+  },
+  // Required for `wrangler preview` / Workers Builds previews.
+  // Secrets (RESEND_API_KEY, RESEND_FROM) are not listed — set them in the dashboard.
+  "previews": {
+    "vars": {
+      "CONSULT_TO": "xifengzhu520@gmail.com"
+    }
+  }
+}

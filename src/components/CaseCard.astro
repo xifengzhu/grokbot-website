@@ -1,0 +1,33 @@
+---
+import { pick, type Localized } from '../content/copy';
+import type { CaseLink } from '../content/cases';
+import type { Locale } from '../lib/locale';
+
+interface Props {
+  locale: Locale;
+  name: string;
+  type: Localized;
+  summary: Localized;
+  links: CaseLink[];
+}
+
+const { locale, name, type, summary, links } = Astro.props;
+---
+
+<article class="case-card">
+  <div class="placeholder" role="img" aria-label="占位图 · Placeholder">占位图 · Placeholder</div>
+  <p class="tag">{pick(locale, type)}</p>
+  <h3>{name}</h3>
+  <p>{pick(locale, summary)}</p>
+  {
+    links.length > 0 && (
+      <div class="case-links">
+        {links.map((link) => (
+          <a href={link.href} rel="noopener noreferrer" target="_blank">
+            {pick(locale, link.label)}
+          </a>
+        ))}
+      </div>
+    )
+  }
+</article>

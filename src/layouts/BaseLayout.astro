@@ -1,0 +1,54 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { absoluteUrl, seoFor } from '../content/seo';
+import { copy, pick } from '../content/copy';
+import { pathFor, type Locale, type PageId } from '../lib/locale';
+
+interface Props {
+  locale: Locale;
+  page: PageId;
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { locale, page, noindex = false } = Astro.props;
+const seo = seoFor(page, locale);
+const title = Astro.props.title ?? seo.title;
+const description = Astro.props.description ?? seo.description;
+const zhUrl = absoluteUrl(pathFor(page, 'zh'));
+const enUrl = absoluteUrl(pathFor(page, 'en'));
+---
+
+<!doctype html>
+<html lang={locale === 'zh' ? 'zh-CN' : 'en'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={seo.og.url} />
+    <meta property="og:type" content={seo.og.type} />
+    <meta property="og:locale" content={locale === 'zh' ? 'zh_CN' : 'en_US'} />
+    <link rel="canonical" href={seo.og.url} />
+    <link rel="alternate" hreflang="zh-CN" href={zhUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={zhUrl} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0B6E4F" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">{pick(locale, copy.common.skip)}</a>
+    <Header locale={locale} page={page} />
+    {locale === 'en' && <p class="draft-banner">{pick(locale, copy.common.enDraftBanner)}</p>}
+    <main id="content">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>

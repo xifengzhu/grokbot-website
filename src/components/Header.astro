@@ -1,0 +1,48 @@
+---
+import { copy, pick } from '../content/copy';
+import { getAlternatePath, pathFor, type Locale, type PageId } from '../lib/locale';
+
+interface Props {
+  locale: Locale;
+  page: PageId;
+}
+
+const { locale, page } = Astro.props;
+const alt = getAlternatePath(pathFor(page, locale), locale === 'zh' ? 'en' : 'zh');
+const langLabel = locale === 'zh' ? pick(locale, copy.nav.langToEn) : pick(locale, copy.nav.langToZh);
+const items: Array<{ id: PageId; label: string }> = [
+  { id: 'home', label: pick(locale, copy.nav.home) },
+  { id: 'services', label: pick(locale, copy.nav.services) },
+  { id: 'cases', label: pick(locale, copy.nav.cases) },
+  { id: 'about', label: pick(locale, copy.nav.about) },
+  { id: 'contact', label: pick(locale, copy.nav.contact) },
+];
+---
+
+<header class="site-header">
+  <div class="site-header-inner wrap">
+    <a class="logo" href={pathFor('home', locale)}>{pick(locale, copy.common.brandDisplay)}</a>
+    <input id="nav-toggle" class="nav-toggle" type="checkbox" />
+    <label class="hamburger" for="nav-toggle">
+      <span class="hamburger-bars" aria-hidden="true"></span>
+      <span>{pick(locale, copy.nav.menu)}</span>
+    </label>
+    <div class="header-panel" id="site-nav">
+      <nav aria-label={pick(locale, copy.nav.primary)}>
+        <ul class="nav-links">
+          {
+            items.map((item) => (
+              <li>
+                <a href={pathFor(item.id, locale)} aria-current={item.id === page ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <a class="lang-switch" href={alt} hrefLang={locale === 'zh' ? 'en' : 'zh-CN'}>{langLabel}</a>
+      <a class="btn btn-primary header-cta" href={pathFor('contact', locale)}>{pick(locale, copy.home.cta)}</a>
+    </div>
+  </div>
+</header>

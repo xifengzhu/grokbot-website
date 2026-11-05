@@ -1,0 +1,7 @@
+# Copy to .dev.vars for `wrangler dev`. Never commit .dev.vars or real keys.
+# Leave RESEND_API_KEY empty to exercise the form fail state.
+# RESEND_FROM must be set to a verified sender before mail will send.
+# The sandbox placeholder string lives in the README only — do not commit it here as a default.
+RESEND_API_KEY=
+RESEND_FROM=
+CONSULT_TO=xifengzhu520@gmail.com

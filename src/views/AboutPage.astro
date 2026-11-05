@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { copy, pick } from '../content/copy';
+import { pathFor, type Locale } from '../lib/locale';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const phone = pick(locale, copy.about.phone);
+const email = pick(locale, copy.about.emailPublic);
+---
+
+<BaseLayout locale={locale} page="about">
+  <div class="wrap about-grid">
+    <div>
+      <header class="page-hero">
+        <h1>{pick(locale, copy.about.pageTitle)}</h1>
+        <p class="lede">{pick(locale, copy.about.lead)}</p>
+      </header>
+      <p>{pick(locale, copy.about.bodyWhat)}</p>
+      <p>{pick(locale, copy.about.bodyHow)}</p>
+      <p>{pick(locale, copy.about.cta)}</p>
+      <p><a class="btn btn-primary" href={pathFor('contact', locale)}>{pick(locale, copy.home.cta)}</a></p>
+    </div>
+    <aside class="fact-sheet">
+      <h2>{pick(locale, copy.about.companyLabel)}</h2>
+      <p>{pick(locale, copy.about.factFounded)}</p>
+      <p>{pick(locale, copy.about.factFounder)}</p>
+      <p class="legal-name">{copy.footer.legalName.zh}</p>
+      <p class="legal-name">{copy.footer.legalName.en}</p>
+      <h2>{pick(locale, copy.about.addressLabel)}</h2>
+      <p>{copy.about.addressGz.zh}</p>
+      {locale === 'en' && <p>{copy.about.addressGz.en}</p>}
+      <h2>{pick(locale, copy.about.phoneLabel)}</h2>
+      <p><a href={`tel:${phone.replaceAll('-', '')}`}>{phone}</a></p>
+      <h2>{pick(locale, copy.about.emailLabel)}</h2>
+      <p><a href={`mailto:${email}`}>{email}</a></p>
+    </aside>
+  </div>
+</BaseLayout>
