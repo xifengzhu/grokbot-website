@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { copy, pick } from '../content/copy';
+import type { Locale } from '../lib/locale';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<BaseLayout locale={locale} page="services">
+  <div class="wrap">
+    <header class="page-hero">
+      <p class="kicker">01 — 05</p>
+      <h1>{pick(locale, copy.services.pageTitle)}</h1>
+      <p class="lede">{pick(locale, copy.services.pageLead)}</p>
+    </header>
+    <div class="service-list">
+      {
+        copy.services.items.map((item, index) => (
+          <article class="service-item" id={item.id}>
+            <span class="num">{String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <h2>{pick(locale, item.title)}</h2>
+              <p>{pick(locale, item.body)}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+    <section class="secondary-block" aria-labelledby="secondary-heading">
+      <h2 id="secondary-heading">{pick(locale, copy.services.secondaryHeading)}</h2>
+      <p>{pick(locale, copy.services.secondaryIntro)}</p>
+      <div class="secondary-list">
+        {
+          copy.services.secondary.map((item) => (
+            <article id={item.id}>
+              <h3>{pick(locale, item.title)}</h3>
+              <p>{pick(locale, item.body)}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+import { copy, pick } from '../content/copy';
+import { pathFor, type Locale } from '../lib/locale';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<section class="cta-band">
+  <div class="cta-band-inner">
+    <h2>{pick(locale, copy.footer.cta)}</h2>
+    <a class="btn footer-cta" href={pathFor('contact', locale)}>{pick(locale, copy.footer.ctaButton)}</a>
+  </div>
+</section>

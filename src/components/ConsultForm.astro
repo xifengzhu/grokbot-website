@@ -1,0 +1,175 @@
+---
+import { copy, pick } from '../content/copy';
+import { FIELD_ERRORS } from '../lib/form-validation';
+import type { Locale } from '../lib/locale';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const errors: Record<(typeof FIELD_ERRORS)[number], string> = {
+  name_required: pick(locale, copy.form.errorName),
+  company_required: pick(locale, copy.form.errorCompany),
+  wechat_or_email_required: pick(locale, copy.form.errorWechatOrEmail),
+  email_invalid: pick(locale, copy.form.errorEmail),
+  need_required: pick(locale, copy.form.errorNeed),
+};
+---
+
+<form
+  id="consult-form"
+  class="consult-form"
+  data-consult-form
+  data-state="empty"
+  method="post"
+  action="/api/consult"
+  novalidate
+>
+  <div class="fields">
+    <label class="field" data-field="name">
+      <span class="label">{pick(locale, copy.form.labelName)} <span class="req">*</span></span>
+      <input name="name" type="text" autocomplete="name" placeholder={pick(locale, copy.form.placeholderName)} />
+      <p class="field-error" data-error="name_required" hidden>{errors.name_required}</p>
+    </label>
+    <label class="field" data-field="company">
+      <span class="label">{pick(locale, copy.form.labelCompany)} <span class="req">*</span></span>
+      <input name="company" type="text" autocomplete="organization" placeholder={pick(locale, copy.form.placeholderCompany)} />
+      <p class="field-error" data-error="company_required" hidden>{errors.company_required}</p>
+    </label>
+    <p class="field-hint" id="contact-hint">{pick(locale, copy.form.wechatOrEmailHint)}</p>
+    <label class="field" data-field="wechat">
+      <span class="label">{pick(locale, copy.form.labelWechat)} <span class="req">*</span></span>
+      <input name="wechat" type="text" autocomplete="off" aria-describedby="contact-hint" placeholder={pick(locale, copy.form.placeholderWechat)} />
+      <p class="field-error" data-error="wechat_or_email_required" hidden>{errors.wechat_or_email_required}</p>
+    </label>
+    <label class="field" data-field="email">
+      <span class="label">{pick(locale, copy.form.labelEmail)} <span class="req">*</span></span>
+      <input name="email" type="email" autocomplete="email" inputmode="email" aria-describedby="contact-hint" placeholder={pick(locale, copy.form.placeholderEmail)} />
+      <p class="field-error" data-error="email_invalid" hidden>{errors.email_invalid}</p>
+    </label>
+    <label class="field" data-field="need">
+      <span class="label">{pick(locale, copy.form.labelNeed)} <span class="req">*</span></span>
+      <textarea name="need" placeholder={pick(locale, copy.form.placeholderNeed)}></textarea>
+      <p class="field-error" data-error="need_required" hidden>{errors.need_required}</p>
+    </label>
+  </div>
+  <div class="submit-row">
+    <button class="btn btn-primary" type="submit" data-submit>
+      <span class="label-idle">{pick(locale, copy.form.submit)}</span>
+      <span class="label-busy">{pick(locale, copy.form.submitting)}</span>
+    </button>
+  </div>
+  <div class="panel panel-success" data-panel="success" hidden role="status">
+    <h2>{pick(locale, copy.form.successTitle)}</h2>
+    <p>{pick(locale, copy.form.successBody)}</p>
+  </div>
+  <div class="panel panel-fail" data-panel="fail" hidden role="alert">
+    <h2>{pick(locale, copy.form.failureTitle)}</h2>
+    <p>{pick(locale, copy.form.failureBody)}</p>
+    <button class="btn btn-ghost" type="button" data-retry>{pick(locale, copy.form.failureRetry)}</button>
+  </div>
+</form>
+
+<script>
+  import { reduceConsultUi, type ConsultUiState } from '../lib/form-ui';
+  import { validateConsult, type FieldErrorCode } from '../lib/form-validation';
+
+  const form = document.querySelector('[data-consult-form]');
+  if (form instanceof HTMLFormElement && form.dataset.ready !== 'true') {
+    form.dataset.ready = 'true';
+    const button = form.querySelector('[data-submit]');
+    const successPanel = form.querySelector('[data-panel="success"]');
+    const failPanel = form.querySelector('[data-panel="fail"]');
+    let state: ConsultUiState = 'empty';
+
+    const fieldMap: Record<string, FieldErrorCode[]> = {
+      name: ['name_required'],
+      company: ['company_required'],
+      wechat: ['wechat_or_email_required'],
+      email: ['email_invalid'],
+      need: ['need_required'],
+    };
+
+    function valueOf(name: string): string {
+      const el = form.elements.namedItem(name);
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) return el.value;
+      return '';
+    }
+
+    function showErrors(codes: readonly string[]) {
+      for (const node of form.querySelectorAll('[data-error]')) {
+        if (node instanceof HTMLElement) {
+          const code = node.dataset.error ?? '';
+          node.hidden = !codes.includes(code);
+        }
+      }
+      for (const [field, related] of Object.entries(fieldMap)) {
+        const wrap = form.querySelector(`[data-field="${field}"]`);
+        const invalid = related.some((code) => codes.includes(code));
+        if (wrap instanceof HTMLElement) wrap.classList.toggle('is-invalid', invalid);
+        const input = wrap?.querySelector('input, textarea');
+        if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) {
+          input.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+        }
+      }
+    }
+
+    function apply(next: ConsultUiState) {
+      state = next;
+      form.dataset.state = next;
+      const locked = next === 'submitting' || next === 'success';
+      if (button instanceof HTMLButtonElement) button.disabled = locked;
+      form.setAttribute('aria-busy', next === 'submitting' ? 'true' : 'false');
+      if (successPanel instanceof HTMLElement) successPanel.hidden = next !== 'success';
+      if (failPanel instanceof HTMLElement) failPanel.hidden = next !== 'fail';
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const result = validateConsult({
+        name: valueOf('name'),
+        company: valueOf('company'),
+        wechat: valueOf('wechat'),
+        email: valueOf('email'),
+        need: valueOf('need'),
+      });
+      const next = reduceConsultUi(state, { type: 'submit', valid: result.ok });
+      if (!result.ok) {
+        showErrors(result.errors);
+        apply(next);
+        const first = form.querySelector('.is-invalid input, .is-invalid textarea');
+        if (first instanceof HTMLElement) first.focus();
+        return;
+      }
+      showErrors([]);
+      apply(next);
+      if (next !== 'submitting') return;
+      let ok = false;
+      try {
+        const response = await fetch('/api/consult', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', accept: 'application/json' },
+          body: JSON.stringify({ ...result.value, requestId: crypto.randomUUID() }),
+        });
+        const payload = (await response.json().catch(() => null)) as { ok?: boolean; code?: string; errors?: string[] } | null;
+        if (payload?.code === 'validation_error' && Array.isArray(payload.errors)) {
+          showErrors(payload.errors);
+          apply('error');
+          return;
+        }
+        ok = response.ok && payload?.ok === true;
+      } catch {
+        ok = false;
+      }
+      apply(reduceConsultUi('submitting', { type: 'resolved', ok }));
+    });
+
+    form.querySelector('[data-retry]')?.addEventListener('click', () => {
+      showErrors([]);
+      apply(reduceConsultUi(state, { type: 'retry' }));
+      const first = form.querySelector('input');
+      if (first instanceof HTMLElement) first.focus();
+    });
+  }
+</script>

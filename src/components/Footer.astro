@@ -1,0 +1,36 @@
+---
+import CtaBand from './CtaBand.astro';
+import { copy, pick } from '../content/copy';
+import type { Locale } from '../lib/locale';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const phone = pick(locale, copy.about.phone);
+const email = pick(locale, copy.about.emailPublic);
+---
+
+<CtaBand locale={locale} />
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p>{pick(locale, copy.footer.blurb)}</p>
+      <p class="legal-name">{copy.footer.legalName.zh}</p>
+      <p class="legal-name">{copy.footer.legalName.en}</p>
+      <p><a href="https://beansmile.xifengzhu.com">{pick(locale, copy.footer.domain)}</a></p>
+    </div>
+    <div>
+      <p>
+        {pick(locale, copy.about.phoneLabel)}
+        <a href={`tel:${phone.replaceAll('-', '')}`}>{phone}</a>
+      </p>
+      <p>
+        {pick(locale, copy.about.emailLabel)}
+        <a href={`mailto:${email}`}>{email}</a>
+      </p>
+      <p>{pick(locale, copy.footer.copyright)}</p>
+    </div>
+  </div>
+</footer>

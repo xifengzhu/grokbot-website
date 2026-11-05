@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ConsultForm from '../components/ConsultForm.astro';
+import { copy, pick } from '../content/copy';
+import type { Locale } from '../lib/locale';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const phone = pick(locale, copy.about.phone);
+const email = pick(locale, copy.about.emailPublic);
+---
+
+<BaseLayout locale={locale} page="contact">
+  <div class="wrap contact-grid">
+    <header class="page-hero">
+      <h1>{pick(locale, copy.contact.pageTitle)}</h1>
+      <p class="lede">{pick(locale, copy.contact.lead)}</p>
+      <div class="fact-sheet">
+        <h2>{pick(locale, copy.contact.directLabel)}</h2>
+        <p>{copy.about.addressGz.zh}</p>
+        <p>
+          {pick(locale, copy.about.phoneLabel)}
+          <a href={`tel:${phone.replaceAll('-', '')}`}>{phone}</a>
+        </p>
+        <p>
+          {pick(locale, copy.about.emailLabel)}
+          <a href={`mailto:${email}`}>{email}</a>
+        </p>
+      </div>
+    </header>
+    <ConsultForm locale={locale} />
+  </div>
+</BaseLayout>

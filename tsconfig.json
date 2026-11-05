@@ -1,0 +1,10 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "strict": true,
+    "types": ["astro/client"],
+    "baseUrl": "."
+  },
+  "include": ["src/**/*", "workers/**/*", "tests/**/*", "vitest.config.ts", "vitest.html.config.ts"],
+  "exclude": ["dist", "node_modules"]
+}

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { copy, pick } from '../content/copy';
+import { pathFor } from '../lib/locale';
+---
+
+<BaseLayout locale="zh" page="home" noindex title={pick('zh', copy.notFound.title)} description={pick('zh', copy.notFound.body)}>
+  <div class="wrap page-hero">
+    <h1>{pick('zh', copy.notFound.title)}</h1>
+    <p class="lede">{pick('zh', copy.notFound.body)}</p>
+    <p><a class="btn btn-primary" href={pathFor('home', 'zh')}>{pick('zh', copy.nav.home)}</a></p>
+  </div>
+</BaseLayout>

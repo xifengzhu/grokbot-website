@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CaseCard from '../components/CaseCard.astro';
+import { primaryCases } from '../content/cases';
+import { copy, pick } from '../content/copy';
+import type { Locale } from '../lib/locale';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<BaseLayout locale={locale} page="cases">
+  <div class="wrap">
+    <header class="page-hero">
+      <h1>{pick(locale, copy.cases.pageTitle)}</h1>
+      <p class="lede">{pick(locale, copy.cases.pageLead)}</p>
+    </header>
+    <div class="case-grid case-grid--all section">
+      {
+        primaryCases.map((item) => (
+          <CaseCard
+            locale={locale}
+            name={item.name}
+            type={item.type}
+            summary={item.summary}
+            links={item.links}
+            media={item.media}
+          />
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

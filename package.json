@@ -1,0 +1,28 @@
+{
+  "name": "beansmile-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "test:html": "vitest run --config vitest.html.config.ts",
+    "deploy": "npm run build && wrangler deploy",
+    "cf:dev": "npm run build && wrangler dev",
+    "cf:dry-run": "npm run build && wrangler deploy --dry-run"
+  },
+  "dependencies": {
+    "astro": "^5.14.1",
+    "resend": "^6.14.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.45.0"
+  }
+}

@@ -1,0 +1,16 @@
+:root {
+  --bg: #f7f8f6;
+  --surface: #ffffff;
+  --ink: #111827;
+  --ink-muted: #6b7280;
+  --brand: #06aa65;
+  --brand-hover: #059556;
+  --brand-soft: #e8f8f0;
+  --line: #e5e7eb;
+  --danger: #b42318;
+  --success: #067647;
+  --shadow: 0 16px 40px rgba(17, 24, 39, 0.06);
+  --font: "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --wrap: min(1180px, calc(100% - 2rem));
+  --header-h: 4.25rem;
+}
